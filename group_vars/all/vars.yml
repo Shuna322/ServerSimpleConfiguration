@@ -1,0 +1,16 @@
+user: www
+packages:
+  - grep 
+  - colordiff
+  - iproute2
+  - net-tools
+  - unzip
+  - tar
+  - unrar
+  - zsh
+  - git
+  - tmux
+  - neovim
+  - wget
+  - htop
+  - neovim

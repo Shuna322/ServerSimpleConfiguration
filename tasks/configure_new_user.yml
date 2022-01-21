@@ -1,0 +1,77 @@
+- block:
+  - name: Check if oh-my-zsh exists
+    stat:
+      path: "/home/{{ user }}/.oh-my-zsh"
+    register: stat_oh_my_zsh_result
+
+  - name: Download oh-my-zsh
+    git:
+      repo: "https://github.com/robbyrussell/oh-my-zsh"
+      dest: "/home/{{ user }}/.oh-my-zsh"
+    when: not stat_oh_my_zsh_result.stat.exists
+  
+  - name: Download antigen
+    shell:
+      cmd: curl -L --silent git.io/antigen > $HOME/antigen.zsh
+
+  - name: Copy antigen config
+    copy:
+      src: "./configs/.antigenrc"
+      dest: "/home/{{ user }}/.antigenrc"
+      owner: "{{ user }}"
+      group: "{{ user }}"
+      mode: u=rw,g=r,o=r
+
+  - name: Backup zsh config
+    copy:
+      src: "$HOME/.zshrc"
+      remote_src: yes
+      dest: "$HOME/.zshrc.bak"
+
+  - name: Copy zsh config
+    copy:
+      src: "configs/.zshrc"
+      remote_src: no
+      dest: "/home/{{ user }}/.zshrc"
+      owner: "{{ user }}"
+      group: "{{ user }}"
+      mode: u=rw,g=r,o=r
+
+  - name: Update alias for update
+    shell: sed -i 's/UPDATECOMMAND/sudo pacman -Syu/' $HOME/.zshrc
+    when: 
+      - os_distribution|string == 'debian'
+
+  become: yes
+  become_user: "{{ user }}"
+
+- block:
+  - name: Change {{ user }} user shell to zsh
+    user:
+      name: "{{ user }}"
+      shell: /bin/zsh
+
+  - name: Check if colour-scripts exists
+    stat:
+      path: "/opt/shell-color-scripts"
+    register: stat_colour_script_result
+
+  - name: Install colour scripts
+    shell: |
+      cd /tmp
+      git clone https://gitlab.com/dwt1/shell-color-scripts.git
+      cd shell-color-scripts
+      sudo rm -rf /opt/shell-color-scripts || return 1
+      sudo mkdir -p /opt/shell-color-scripts/colorscripts || return 1
+      sudo cp -rf colorscripts/* /opt/shell-color-scripts/colorscripts
+      sudo cp colorscript.sh /usr/bin/colorscript
+      # optional for zsh completion
+      sudo cp zsh_completion/_colorscript /usr/share/zsh/site-functions
+      cd ..
+
+      sudo rm -rf ./shell-color-scripts
+      exit 0
+    when: not stat_colour_script_result.stat.exists
+  
+  become: yes
+  become_user: root

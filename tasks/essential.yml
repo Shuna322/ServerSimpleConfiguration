@@ -1,0 +1,66 @@
+- name: Update packages
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Install essential packages
+  package:
+    name: "{{ packages }}"
+    state: latest
+
+- name: Make sure we have a 'wheel' group
+  group:
+    name: wheel
+    state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  lineinfile:
+    dest: /etc/sudoers
+    state: present
+    regexp: '^%wheel'
+    line: '%wheel ALL=(ALL) ALL'
+    validate: 'visudo -cf %s'
+
+- name: Preparing group for "{{ user }}" user
+  group:
+    name: www
+    state: present
+
+- name: Creating user "{{ user }}" with admin access
+  user: 
+    name: "{{ user }}"
+    password: "{{ user_password | password_hash('sha512', 'mysecretsalt') }}"
+    groups: www,wheel
+    group: www
+    append: yes
+    state: present
+    createhome: yes
+    shell: /bin/bash
+  register: user_created
+
+- name: Disable Root Login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^PermitRootLogin'
+    line: "PermitRootLogin no"
+    state: present
+    backup: yes
+
+- name: Disable SSH password auth
+  lineinfile:
+    dest: /etc/ssh/ssh_config
+    regexp: "^#PasswordAuthentication yes"
+    line: "PasswordAuthentication no"
+  register: sshd_config
+
+- name: Restart SSH daemon
+  service:
+    name: sshd
+    state: restarted
+  when: sshd_config.changed
+
+- name: Set authorized key for user "{{ user }}" copying it from root
+  authorized_key:
+    user: "{{ user }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
