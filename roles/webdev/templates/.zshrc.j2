@@ -158,12 +158,12 @@ alias chgrp='chgrp --preserve-root'
 # Ewww
 alias vi='vim'
 
-
 # update on one command
-alias update='UPDATECOMMAND'
-
-# Custom arch flags for compilation
-# export ARCHFLAGS="-arch x86_64"
+{% if os_distribution == "debian" %}
+  alias update='sudo apt update && sudo apt upgrade'
+{% elif os_distribution == "arch" %}
+  alias update='sudo pacman -Syu'
+{% endif %}
 
 # adding flags
 alias df='df -h'                          # human-readable sizes

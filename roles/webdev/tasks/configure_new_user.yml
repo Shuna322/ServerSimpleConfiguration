@@ -16,31 +16,21 @@
 
   - name: Copy antigen config
     copy:
-      src: "./configs/.antigenrc"
+      src: "./roles/webdev/files/.antigenrc"
       dest: "/home/{{ user }}/.antigenrc"
       owner: "{{ user }}"
       group: "{{ user }}"
       mode: u=rw,g=r,o=r
 
-  - name: Backup zsh config
-    copy:
-      src: "$HOME/.zshrc"
-      remote_src: yes
-      dest: "$HOME/.zshrc.bak"
-
   - name: Copy zsh config
-    copy:
-      src: "configs/.zshrc"
+    template:
+      src: "./roles/webdev/templates/.zshrc.j2"
       remote_src: no
       dest: "/home/{{ user }}/.zshrc"
       owner: "{{ user }}"
       group: "{{ user }}"
       mode: u=rw,g=r,o=r
-
-  - name: Update alias for update
-    shell: sed -i 's/UPDATECOMMAND/sudo pacman -Syu/' $HOME/.zshrc
-    when: 
-      - os_distribution|string == 'debian'
+      backup: yes
 
   become: yes
   become_user: "{{ user }}"

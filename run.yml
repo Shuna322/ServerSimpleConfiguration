@@ -1,6 +1,0 @@
----
-- hosts: workstore
-  tasks:
-    - import_tasks: tasks/essential.yml
-    - import_tasks: tasks/docker.yml
-    - import_tasks: tasks/configure_new_user.yml
