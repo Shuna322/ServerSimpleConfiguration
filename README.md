@@ -1,3 +1,4 @@
+![Screenshot with end result](https://i.imgur.com/LcJUexY.png)
 
 # What this project about?
 This repository contains Ansible playbook with tasks to automate my day to day work. A lot of times I need to deploy small project somewhere on the web on some cloud provider VM, usually this task requires to setup separate user, improve some security settings, install necessary packages, prepare docker, portainer, traefik, etc.
@@ -11,7 +12,6 @@ In the end I receive server with oh-my-zsh, my custom dot files, docker, and dis
     - [Requirements](#requirements)
     - [Quick local test](#quick-local-test)
     - [How to use in production](#how-to-use-in-production)
-  - [End result](#end-result)
 
 ## How to use
 
@@ -59,5 +59,3 @@ foo@bar:~$ ansible-playbook -i production main.yml --ask-vault-pass -K
 ```
 
 3. Verify that you can connect to host with username and ssh key that was used. ( **www** is the default )
-
-## End result
