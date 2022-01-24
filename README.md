@@ -21,10 +21,10 @@ In the end I receive server with oh-my-zsh, my custom dot files, docker, and dis
 3. You can connect to your server with root@server_ip
 4. Vagrant and VirtualBox is installed on your local machine ( **Only for local test** )
 5. Review [vars.yml](group_vars/all/vars.yml) file. You can change list of pre installed packages, and also change username.
-6. Replace secret file with password for future user. Use command:
+6. Create secret file with password for future user. Use command:
 
 ```console
-foo@bar:~$ rm ./group_vars/all/secret.yml && ansible-vault create ./group_vars/all/secret.yml
+foo@bar:~$ ansible-vault create ./group_vars/all/secret.yml
 ```
 
 and create variable like this:
