@@ -12,6 +12,7 @@ services:
       - /etc/traefik:/etc/traefik
       - traefik-ssl-certs:/ssl/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/log/traefik:/var/log/traefik
     labels:
       traefik.enable: true
       # traefik.http.routers.traefik-api.rule: "Host(`workstoredevelopment.tk`)"
@@ -21,16 +22,13 @@ services:
       traefik.http.routers.traefik-api.service: "api@internal"
       traefik.http.routers.traefik-api.middlewares: "dashboardauth@docker"
       #basic auth
-      traefik.http.middlewares.dashboardauth.basicauth.users: "admin:$$2y$$10$$fEvSUNYArt4D7UcTIwTLYeeiaH0yG6iUluZ7pcSElYHKW.FVbi4RK"
+      traefik.http.middlewares.dashboardauth.basicauth.users: "admin:$$2y$$10$$YZLOYr0MQZ8co.C12CR09OAenp9F8nG5c1gVxW/EvWi5Yw5QKlK8S"
     networks:
       - traefik-proxy
 
   portainer:
     image: "portainer/portainer-ce:2.11.0"
     container_name: "portainer"
-    ports:
-      - "8000:8000"
-      - "9443:9443"
     restart: always
     depends_on:
       - traefik
@@ -44,6 +42,7 @@ services:
       traefik.http.routers.portainer.tls: "true"
       traefik.http.routers.portainer.tls.certresolver: "production"
       traefik.http.services.portainer.loadbalancer.server.port: "9443"
+
     networks:
       - traefik-proxy
 
