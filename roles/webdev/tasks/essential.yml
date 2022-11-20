@@ -81,5 +81,3 @@
     group: "{{ user }}"
     mode: 0600
     remote_src: yes
-    when: user_created is changed
-
