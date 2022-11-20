@@ -15,7 +15,7 @@ services:
       - /var/log/traefik:/var/log/traefik
     labels:
       traefik.enable: true
-      # traefik.http.routers.traefik-api.rule: "Host(`workstoredevelopment.tk`)"
+      traefik.http.routers.traefik-api.rule: "Host(`traefik.wps.3dconfiguration.com`)"
       traefik.http.routers.traefik-api.entryPoints: "web, websecure"
       traefik.http.routers.traefik-api.tls: "true"
       traefik.http.routers.traefik-api.tls.certresolver: "production"
@@ -37,11 +37,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
       traefik.enable: true
-      # traefik.http.routers.traefik-api.rule: "Host(`portainer.workstoredevelopment.tk`)"
+      traefik.http.routers.portainer.rule: "Host(`portainer.wps.3dconfiguration.com`)"
       traefik.http.routers.portainer.entryPoints: "web, websecure"
       traefik.http.routers.portainer.tls: "true"
       traefik.http.routers.portainer.tls.certresolver: "production"
-      traefik.http.services.portainer.loadbalancer.server.port: "9443"
+      traefik.http.services.portainer.loadbalancer.server.port: "9000"
 
     networks:
       - traefik-proxy

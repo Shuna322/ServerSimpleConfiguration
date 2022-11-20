@@ -16,7 +16,7 @@ setopt autocd                                                   # if only direct
 
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
-zstyle ':completion:*' rehash true                              # automatically find new executables in path 
+zstyle ':completion:*' rehash true                              # automatically find new executables in path
 # Speed up completions
 zstyle ':completion:*' accept-exact '*(N)'
 zstyle ':completion:*' use-cache on
@@ -71,7 +71,7 @@ if [ ! "$SSH_AUTH_SOCK" ] || [ $agent_run_state = 2 ]; then
     if compgen -G "$HOME/.ssh/*.key" | grep "key" >/dev/null; then
         ssh-add $HOME/.ssh/*.key
     fi
-    
+
     if [ -f "$HOME/.ssh/id_rsa" ]; then
         ssh-add $HOME/.ssh/id_rsa
     fi
@@ -124,7 +124,7 @@ ex ()
       *.7z)        7z x $1      ;;
       *.deb)       ar x $1      ;;
       *.tar.xz)    tar xf $1    ;;
-      *.tar.zst)   unzstd $1    ;;      
+      *.tar.zst)   unzstd $1    ;;
       *)           echo "'$1' cannot be extracted via ex()" ;;
     esac
   else
@@ -134,7 +134,7 @@ ex ()
 
 
 # navigation
-alias ..='cd ..' 
+alias ..='cd ..'
 alias ...='cd ../..'
 alias .3='cd ../../..'
 alias .4='cd ../../../..'
@@ -187,4 +187,6 @@ alias diff='colordiff'
 # Show open ports
 alias ports='netstat -tulanp'
 
-colorscript -e crunch 
+eval "$(starship init zsh)"
+
+colorscript -e crunch

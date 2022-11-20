@@ -9,7 +9,7 @@
       repo: "https://github.com/robbyrussell/oh-my-zsh"
       dest: "/home/{{ user }}/.oh-my-zsh"
     when: not stat_oh_my_zsh_result.stat.exists
-  
+
   - name: Download antigen
     shell:
       cmd: curl -L --silent git.io/antigen > $HOME/antigen.zsh
@@ -18,6 +18,19 @@
     copy:
       src: "./roles/webdev/files/.antigenrc"
       dest: "/home/{{ user }}/.antigenrc"
+      owner: "{{ user }}"
+      group: "{{ user }}"
+      mode: u=rw,g=r,o=r
+
+  - name: Make sure .config dir exists
+    file:
+      path: "/home/{{ user }}/.config/"
+      state: directory
+
+  - name: Copy starship config
+    copy:
+      src: "./roles/webdev/files/starship.toml"
+      dest: "/home/{{ user }}/.config/starship.toml"
       owner: "{{ user }}"
       group: "{{ user }}"
       mode: u=rw,g=r,o=r
@@ -62,6 +75,6 @@
       sudo rm -rf ./shell-color-scripts
       exit 0
     when: not stat_colour_script_result.stat.exists
-  
+
   become: yes
   become_user: root
